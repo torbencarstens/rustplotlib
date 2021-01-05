@@ -1,14 +1,16 @@
 use std::collections::HashMap;
 use std::fmt::Display;
-use svg::node::Node;
+
 use svg::node::element::Group;
-use crate::components::scatter::{ScatterPoint, MarkerType, PointLabelPosition};
+use svg::node::Node;
+
 use crate::colors::Color;
+use crate::components::DatumRepresentation;
+use crate::components::legend::{LegendEntry, LegendMarkerType};
+use crate::components::scatter::{MarkerType, PointLabelPosition, ScatterPoint};
 use crate::Scale;
 use crate::views::datum::PointDatum;
 use crate::views::View;
-use crate::components::DatumRepresentation;
-use crate::components::legend::{LegendEntry, LegendMarkerType};
 
 /// A View that represents data as a scatter plot.
 pub struct ScatterView<'a, T: Display, U: Display> {
@@ -95,11 +97,11 @@ impl<'a, T: Display, U: Display> ScatterView<'a, T, U> {
     /// Load and process a dataset of BarDatum points.
     pub fn load_data(mut self, data: &Vec<impl PointDatum<T, U>>) -> Result<Self, String> {
         match self.x_scale {
-            Some(_) => {},
+            Some(_) => {}
             _ => return Err("Please provide a scale for the X dimension before loading data".to_string()),
         }
         match self.y_scale {
-            Some(_) => {},
+            Some(_) => {}
             _ => return Err("Please provide a scale for the Y dimension before loading data".to_string()),
         }
 
@@ -145,14 +147,13 @@ impl<'a, T: Display, U: Display> ScatterView<'a, T, U> {
 
         for datum in data.iter() {
             match map.insert(datum.get_key(), 0) {
-                Some(_) => {},
+                Some(_) => {}
                 None => keys.push(datum.get_key()),
             }
         }
 
         keys
     }
-
 }
 
 impl<'a, T: Display, U: Display> View<'a> for ScatterView<'a, T, U> {

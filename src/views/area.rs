@@ -1,14 +1,16 @@
-use svg::node::Node;
+use std::fmt::Display;
+
 use svg::node::element::Group;
-use crate::components::scatter::{ScatterPoint, MarkerType, PointLabelPosition};
+use svg::node::Node;
+
 use crate::colors::Color;
+use crate::components::area::AreaSeries;
+use crate::components::DatumRepresentation;
+use crate::components::legend::{LegendEntry, LegendMarkerType};
+use crate::components::scatter::{MarkerType, PointLabelPosition, ScatterPoint};
 use crate::Scale;
 use crate::views::datum::PointDatum;
 use crate::views::View;
-use crate::components::DatumRepresentation;
-use std::fmt::Display;
-use crate::components::legend::{LegendEntry, LegendMarkerType};
-use crate::components::area::AreaSeries;
 
 /// A View that represents data as a scatter plot.
 pub struct AreaSeriesView<'a, T: Display + Clone, U: Display + Clone> {
@@ -85,11 +87,11 @@ impl<'a, T: Display + Clone, U: Display + Clone> AreaSeriesView<'a, T, U> {
     /// Load and process a dataset of BarDatum points.
     pub fn load_data(mut self, data: &Vec<impl PointDatum<T, U>>) -> Result<Self, String> {
         match self.x_scale {
-            Some(_) => {},
+            Some(_) => {}
             _ => return Err("Please provide a scale for the X dimension before loading data".to_string()),
         }
         match self.y_scale {
-            Some(_) => {},
+            Some(_) => {}
             _ => return Err("Please provide a scale for the Y dimension before loading data".to_string()),
         }
 
@@ -124,6 +126,7 @@ impl<'a, T: Display + Clone, U: Display + Clone> AreaSeriesView<'a, T, U> {
         };
         let first = data.first().unwrap();
         let last = data.last().unwrap();
+
         points.push(ScatterPoint::new(self.x_scale.unwrap().scale(&last.get_x()) + x_bandwidth_offset, y_origin, self.marker_type, 5, data[0].get_x(), data[0].get_y(), self.label_position, false, false, "#fff".to_string()));
         points.push(ScatterPoint::new(self.x_scale.unwrap().scale(&first.get_x()) + x_bandwidth_offset, y_origin, self.marker_type, 5, data[0].get_x(), data[0].get_y(), self.label_position, false, false, "#fff".to_string()));
 

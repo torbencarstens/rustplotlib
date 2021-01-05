@@ -1,10 +1,12 @@
 use std::string::ToString;
-use svg::node::element::Group;
-use svg::parser::Error;
+
 use svg::Node;
-use svg::node::Text as TextNode;
+use svg::node::element::Group;
 use svg::node::element::Text;
-use crate::{Scale, Chart};
+use svg::node::Text as TextNode;
+use svg::parser::Error;
+
+use crate::{Chart, Scale};
 use crate::components::axis::{AxisLine, AxisTick};
 use crate::scales::ScaleType;
 
@@ -28,11 +30,17 @@ pub struct Axis {
     length: isize,
 }
 
+
+fn default_label_offset() -> (usize, usize) {
+    (12, 16)
+}
+
+
 impl Axis {
     /// Create a new instance of an axis for a chart based on the provided scale and position.
-    fn new<'a, T: ToString>(scale: &'a dyn Scale<T>, position: AxisPosition, chart: &Chart<'a>) -> Self {
+    fn new<'a, T: ToString>(scale: &'a dyn Scale<T>, position: AxisPosition, chart: &Chart<'a>, label_offset: (usize, usize)) -> Self {
         Self {
-            ticks: Self::generate_ticks(scale, position),
+            ticks: Self::generate_ticks(scale, position, label_offset),
             position,
             axis_line: Self::get_axis_line(position, chart),
             label: String::new(),
@@ -43,23 +51,23 @@ impl Axis {
     }
 
     /// Create a new axis at the top of the chart.
-    pub fn new_top_axis<'a, T: ToString>(scale: &'a dyn Scale<T>, chart: &Chart<'a>) -> Self {
-        Self::new(scale, AxisPosition::Top, chart)
+    pub fn new_top_axis<'a, T: ToString>(scale: &'a dyn Scale<T>, chart: &Chart<'a>, label_offset: Option<(usize, usize)>) -> Self {
+        Self::new(scale, AxisPosition::Top, chart, label_offset.unwrap_or(default_label_offset()))
     }
 
     /// Create a new axis to the right of the chart.
-    pub fn new_right_axis<'a, T: ToString>(scale: &'a dyn Scale<T>, chart: &Chart<'a>) -> Self {
-        Self::new(scale, AxisPosition::Right, chart)
+    pub fn new_right_axis<'a, T: ToString>(scale: &'a dyn Scale<T>, chart: &Chart<'a>, label_offset: Option<(usize, usize)>) -> Self {
+        Self::new(scale, AxisPosition::Right, chart, label_offset.unwrap_or(default_label_offset()))
     }
 
     /// Create a new axis at the bottom of the chart.
-    pub fn new_bottom_axis<'a, T: ToString>(scale: &'a dyn Scale<T>, chart: &Chart<'a>) -> Self {
-        Self::new(scale, AxisPosition::Bottom, chart)
+    pub fn new_bottom_axis<'a, T: ToString>(scale: &'a dyn Scale<T>, chart: &Chart<'a>, label_offset: Option<(usize, usize)>) -> Self {
+        Self::new(scale, AxisPosition::Bottom, chart, label_offset.unwrap_or(default_label_offset()))
     }
 
     /// Create a new axis to the left of the chart.
-    pub fn new_left_axis<'a, T: ToString>(scale: &'a dyn Scale<T>, chart: &Chart<'a>) -> Self {
-        Self::new(scale, AxisPosition::Left, chart)
+    pub fn new_left_axis<'a, T: ToString>(scale: &'a dyn Scale<T>, chart: &Chart<'a>, label_offset: Option<(usize, usize)>) -> Self {
+        Self::new(scale, AxisPosition::Left, chart, label_offset.unwrap_or(default_label_offset()))
     }
 
     /// Set axis label.
@@ -134,13 +142,13 @@ impl Axis {
     }
 
     /// Generate ticks for the axis based on the scale and position.
-    fn generate_ticks<'a, T: ToString>(scale: &'a dyn Scale<T>, position: AxisPosition) -> Vec<AxisTick> {
+    fn generate_ticks<'a, T: ToString>(scale: &'a dyn Scale<T>, position: AxisPosition, label_offset: (usize, usize)) -> Vec<AxisTick> {
         let mut ticks = Vec::new();
         let label_offset = {
             if position == AxisPosition::Top || position == AxisPosition::Bottom {
-                16
+                label_offset.1
             } else {
-                12
+                label_offset.0
             }
         };
 

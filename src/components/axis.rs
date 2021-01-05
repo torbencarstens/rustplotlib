@@ -1,8 +1,9 @@
-use svg::node::element::{Group, Line};
-use svg::node::Text as TextNode;
-use svg::node::element::Text;
-use svg::Node;
 use format_num::NumberFormat;
+use svg::Node;
+use svg::node::element::{Group, Line};
+use svg::node::element::Text;
+use svg::node::Text as TextNode;
+
 use crate::axis::AxisPosition;
 
 /// A simple struct that represents an axis line.
@@ -21,13 +22,19 @@ impl AxisLine {
 
     /// Render the axis line to svg.
     pub fn to_svg(&self) -> Result<Line, String> {
+        let stroke_width = if self.x1 == self.x2 {
+            1
+        } else {
+            2
+        };
+
         let line = Line::new()
             .set("x1", self.x1)
             .set("y1", self.y1)
-            .set("x2", self.x2)
+            .set("x2", self.x2 + 0.000001)
             .set("y2", self.y2)
             .set("shape-rendering", "crispEdges")
-            .set("stroke-width", 1)
+            .set("stroke-width", stroke_width)
             .set("stroke", "#bbbbbb");
 
         Ok(line)
@@ -41,7 +48,7 @@ pub struct AxisTick {
     label_rotation: isize,
     tick_offset: f32,
     label: String,
-    label_format: Option<String>
+    label_format: Option<String>,
 }
 
 impl AxisTick {
@@ -86,25 +93,25 @@ impl AxisTick {
                 tick_line_p2 = (-6, 0);
                 tick_label_offset = (-(self.label_offset as isize), 0);
                 tick_label_text_anchor = "end";
-            },
+            }
             AxisPosition::Bottom => {
                 offsets = (self.tick_offset, 0_f32);
                 tick_line_p2 = (0, 6);
                 tick_label_offset = (0, self.label_offset as isize);
                 tick_label_text_anchor = "middle";
-            },
+            }
             AxisPosition::Right => {
                 offsets = (0_f32, self.tick_offset);
                 tick_line_p2 = (6, 0);
                 tick_label_offset = (self.label_offset as isize, 0);
                 tick_label_text_anchor = "start";
-            },
+            }
             AxisPosition::Top => {
                 offsets = (self.tick_offset, 0_f32);
                 tick_line_p2 = (0, -6);
                 tick_label_offset = (0, -(self.label_offset as isize));
                 tick_label_text_anchor = "middle";
-            },
+            }
         };
 
         let mut group = Group::new()

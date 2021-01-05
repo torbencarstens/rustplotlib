@@ -1,16 +1,18 @@
-use std::string::ToString;
 use std::ffi::OsStr;
 use std::path::Path;
+use std::string::ToString;
+
 use svg;
-use svg::node::element::Group;
 use svg::Node;
-use svg::node::Text as TextNode;
+use svg::node::element::Group;
 use svg::node::element::Text;
+use svg::node::Text as TextNode;
+
 use crate::{Axis, Scale};
-use crate::views::View;
 use crate::axis::AxisPosition;
-use crate::legend::Legend;
 use crate::components::legend::LegendEntry;
+use crate::legend::Legend;
+use crate::views::View;
 
 /// Define the orientation enum to aid in rendering and business logic.
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -91,26 +93,26 @@ impl<'a> Chart<'a> {
     }
 
     /// Add an axis at the bottom of the chart.
-    pub fn add_axis_bottom<T: ToString>(mut self, scale: &'a dyn Scale<T>) -> Self {
-        self.x_axis_bottom = Some(Axis::new_bottom_axis(scale, &self));
+    pub fn add_axis_bottom<T: ToString>(mut self, scale: &'a dyn Scale<T>, label_offset: Option<(usize, usize)>) -> Self {
+        self.x_axis_bottom = Some(Axis::new_bottom_axis(scale, &self, label_offset));
         self
     }
 
     /// Add an axis at the left of the chart.
-    pub fn add_axis_left<T: ToString>(mut self, scale: &'a dyn Scale<T>) -> Self {
-        self.y_axis_left = Some(Axis::new_left_axis(scale, &self));
+    pub fn add_axis_left<T: ToString>(mut self, scale: &'a dyn Scale<T>, label_offset: Option<(usize, usize)>) -> Self {
+        self.y_axis_left = Some(Axis::new_left_axis(scale, &self, label_offset));
         self
     }
 
     /// Add an axis at the top of the chart.
-    pub fn add_axis_top<T: ToString>(mut self, scale: &'a dyn Scale<T>) -> Self {
-        self.x_axis_top = Some(Axis::new_top_axis(scale, &self));
+    pub fn add_axis_top<T: ToString>(mut self, scale: &'a dyn Scale<T>, label_offset: Option<(usize, usize)>) -> Self {
+        self.x_axis_top = Some(Axis::new_top_axis(scale, &self, label_offset));
         self
     }
 
     /// Add an axis at the right of the chart.
-    pub fn add_axis_right<T: ToString>(mut self, scale: &'a dyn Scale<T>) -> Self {
-        self.y_axis_right = Some(Axis::new_right_axis(scale, &self));
+    pub fn add_axis_right<T: ToString>(mut self, scale: &'a dyn Scale<T>, label_offset: Option<(usize, usize)>) -> Self {
+        self.y_axis_right = Some(Axis::new_right_axis(scale, &self, label_offset));
         self
     }
 
@@ -204,7 +206,7 @@ impl<'a> Chart<'a> {
     pub fn set_bottom_axis_tick_label_rotation(mut self, rotation: isize) -> Self {
         match &mut self.x_axis_bottom {
             Some(axis) => axis.set_tick_label_rotation(rotation),
-            None => {},
+            None => {}
         }
         self
     }
@@ -213,7 +215,7 @@ impl<'a> Chart<'a> {
     pub fn set_top_axis_tick_label_rotation(mut self, rotation: isize) -> Self {
         match &mut self.x_axis_top {
             Some(axis) => axis.set_tick_label_rotation(rotation),
-            None => {},
+            None => {}
         }
         self
     }
@@ -222,7 +224,7 @@ impl<'a> Chart<'a> {
     pub fn set_left_axis_tick_label_rotation(mut self, rotation: isize) -> Self {
         match &mut self.y_axis_left {
             Some(axis) => axis.set_tick_label_rotation(rotation),
-            None => {},
+            None => {}
         }
         self
     }
@@ -231,7 +233,7 @@ impl<'a> Chart<'a> {
     pub fn set_right_axis_tick_label_rotation(mut self, rotation: isize) -> Self {
         match &mut self.y_axis_right {
             Some(axis) => axis.set_tick_label_rotation(rotation),
-            None => {},
+            None => {}
         }
         self
     }
@@ -240,7 +242,7 @@ impl<'a> Chart<'a> {
     pub fn set_left_axis_tick_label_format(mut self, format: &str) -> Self {
         match &mut self.y_axis_left {
             Some(axis) => axis.set_tick_label_format(format),
-            None => {},
+            None => {}
         }
         self
     }
@@ -249,7 +251,7 @@ impl<'a> Chart<'a> {
     pub fn set_right_axis_tick_label_format(mut self, format: &str) -> Self {
         match &mut self.y_axis_right {
             Some(axis) => axis.set_tick_label_format(format),
-            None => {},
+            None => {}
         }
         self
     }
@@ -258,7 +260,7 @@ impl<'a> Chart<'a> {
     pub fn set_top_axis_tick_label_format(mut self, format: &str) -> Self {
         match &mut self.x_axis_top {
             Some(axis) => axis.set_tick_label_format(format),
-            None => {},
+            None => {}
         }
         self
     }
@@ -267,7 +269,7 @@ impl<'a> Chart<'a> {
     pub fn set_bottom_axis_tick_label_format(mut self, format: &str) -> Self {
         match &mut self.x_axis_bottom {
             Some(axis) => axis.set_tick_label_format(format),
-            None => {},
+            None => {}
         }
         self
     }
@@ -304,7 +306,7 @@ impl<'a> Chart<'a> {
         if let Some(ref axis) = self.x_axis_bottom {
             let mut axis_group = axis.to_svg().unwrap();
             axis_group.assign("transform", format!("translate({},{})", self.margin_left, self.height - self.margin_bottom));
-            group.append(axis_group);
+            group.append(axis_group.clone());
         };
 
         if let Some(ref axis) = self.y_axis_left {
@@ -345,7 +347,7 @@ impl<'a> Chart<'a> {
                     width = self.width - self.margin_right - self.margin_left;
                     x_offset = self.margin_left;
                     y_offset = axis_height;
-                },
+                }
                 AxisPosition::Bottom => {
                     // Compute the height of the bottom axis that should serve
                     // as an offset for the legend.
@@ -366,7 +368,7 @@ impl<'a> Chart<'a> {
                     width = self.width - self.margin_right - self.margin_left;
                     x_offset = self.margin_left;
                     y_offset = self.height - self.margin_bottom + axis_height;
-                },
+                }
                 AxisPosition::Left => {
                     let axis_width = {
                         if let Some(ref axis) = self.y_axis_left {
@@ -382,7 +384,7 @@ impl<'a> Chart<'a> {
                     width = self.margin_left - axis_width - 10; // 10 is described in the comment below
                     x_offset = 10; // always have a 10px padding from the left of the chart
                     y_offset = self.margin_top;
-                },
+                }
                 AxisPosition::Right => {
                     let axis_width = {
                         if let Some(ref axis) = self.y_axis_right {
@@ -427,11 +429,11 @@ impl<'a> Chart<'a> {
                             .add(svg_content);
 
                         svg::save(path, &document).unwrap()
-                    },
+                    }
                     Err(e) => return Err(format!("Encountered an error while saving the chart: {:?}", e)),
                 }
-            },
-            _ => {},
+            }
+            _ => {}
         };
         Ok(())
     }
