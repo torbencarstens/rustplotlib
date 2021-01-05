@@ -2,15 +2,18 @@
 
 A pure Rust visualization library inspired by D3.js.
 
+## (!) Note
+
+The changes in this repo are made to fit a personal project. They are in no way designed to fit a larger audience.
+
+## Examples
+
 See [gallery](./gallery) and [examples](./examples) for code and more charts.
 
 ![Frequency Of English Letters](./assets/img/gallery/letter-frequency.svg)
 
 ![Revenue By Music Format](./assets/img/gallery/revenue-by-music-format.svg)
 
-## (!) Note
-
-The changes in this repo are made to fit a personal project. They are in no way designed to fit a larger audience.
 
 ## Install
 
