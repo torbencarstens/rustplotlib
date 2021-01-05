@@ -8,6 +8,10 @@ See [gallery](./gallery) and [examples](./examples) for code and more charts.
 
 ![Revenue By Music Format](./assets/img/gallery/revenue-by-music-format.svg)
 
+## (!) Note
+
+The changes in this repo are made to fit a personal project. They are in no way designed to fit a larger audience.
+
 ## Install
 
 You can add this as a dependency to your project in your `Cargo.toml` file:
