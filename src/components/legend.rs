@@ -112,7 +112,7 @@ impl LegendEntry {
                 .set("y", self.marker_size)
                 .set("dy", ".35em")
                 .set("font-family", "sans-serif")
-                .set("fill", "#777")
+                .set("fill", "#aaa")
                 .set("font-size", "12px")
                 .add(TextNode::new(self.label.clone()))
         );

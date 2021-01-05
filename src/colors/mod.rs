@@ -64,6 +64,20 @@ impl Color {
         )
     }
 
+    /// An array of eight categorical colors
+    pub fn color_scheme_light() -> Vec<Self> {
+        vec!(
+            Color { hex: "#999999".to_string() },
+            Color { hex: "#d95f02".to_string() },
+            Color { hex: "#7570b3".to_string() },
+            Color { hex: "#e7298a".to_string() },
+            Color { hex: "#66a61e".to_string() },
+            Color { hex: "#e6ab02".to_string() },
+            Color { hex: "#a6761d".to_string() },
+            Color { hex: "#666666".to_string() },
+        )
+    }
+
     /// Represent a color as a hex string.
     pub fn as_hex(&self) -> String {
         String::from(&self.hex)

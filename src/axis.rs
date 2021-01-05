@@ -126,13 +126,14 @@ impl Axis {
                 AxisPosition::Left => (-(self.length as i32 / 2), -42, -90),
                 AxisPosition::Right => ((self.length as i32 / 2), -42, 90),
             };
+
             let axis_label = Text::new()
                 .set("x", x)
                 .set("y", y)
                 .set("text-anchor", "middle")
                 .set("font-size", "14px")
                 .set("font-family", "sans-serif")
-                .set("fill", "#777")
+                .set("fill", "#aaa")
                 .set("transform", format!("rotate({})", rotate))
                 .add(TextNode::new(&self.label));
             group.append(axis_label);

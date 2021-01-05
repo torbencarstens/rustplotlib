@@ -137,7 +137,7 @@ impl<T: Display, U: Display> DatumRepresentation for ScatterPoint<T, U> {
             let mut point_label = Text::new()
                 .set("dy", ".35em")
                 .set("font-family", "sans-serif")
-                .set("fill", "#333")
+                .set("fill", "#ccc")
                 .set("font-size", "14px")
                 .add(TextNode::new(format!("{}", self.y_label)));
 

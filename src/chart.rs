@@ -288,7 +288,7 @@ impl<'a> Chart<'a> {
                     .set("x", 0)
                     .set("y", 0)
                     .set("dy", ".35em")
-                    .set("fill", "#777")
+                    .set("fill", "#aaa")
                     .set("text-anchor", "middle")
                     .set("font-size", "24px")
                     .set("font-family", "sans-serif")

@@ -135,7 +135,7 @@ impl AxisTick {
             .set("text-anchor", tick_label_text_anchor)
             .set("font-size", "12px")
             .set("font-family", "sans-serif")
-            .set("fill", "#777")
+            .set("fill", "#aaa")
             .add(TextNode::new(formatted_label));
 
         group.append(tick_line);
