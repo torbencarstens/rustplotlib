@@ -6,6 +6,7 @@ pub(crate) mod scatter;
 pub(crate) mod line;
 pub(crate) mod legend;
 pub(crate) mod area;
+pub mod grid;
 
 /// A trait that defines behavior of chart components.
 pub trait DatumRepresentation {

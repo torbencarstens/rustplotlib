@@ -26,6 +26,7 @@ pub use crate::axis::{Axis, AxisPosition};
 pub use crate::chart::Chart;
 pub use crate::colors::Color;
 pub use crate::components::bar::BarLabelPosition;
+pub use crate::components::grid::Grid;
 pub use crate::components::line::LineSeries;
 pub use crate::components::scatter::{MarkerType, PointLabelPosition};
 pub use crate::scales::band::ScaleBand;

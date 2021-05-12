@@ -10,6 +10,7 @@ use svg::node::Text as TextNode;
 
 use crate::{Axis, Scale};
 use crate::axis::AxisPosition;
+use crate::components::grid::Grid;
 use crate::components::legend::LegendEntry;
 use crate::legend::Legend;
 use crate::views::View;
@@ -37,6 +38,7 @@ pub struct Chart<'a> {
     legend_position: Option<AxisPosition>,
     views: Vec<&'a dyn View<'a>>,
     title: String,
+    grid: Option<Grid>,
 }
 
 impl<'a> Chart<'a> {
@@ -56,6 +58,7 @@ impl<'a> Chart<'a> {
             legend_position: None,
             views: Vec::new(),
             title: String::new(),
+            grid: None,
         }
     }
 
@@ -89,6 +92,12 @@ impl<'a> Chart<'a> {
     /// Add the dataset to the chart's view.
     pub fn add_view(mut self, view: &'a dyn View<'a>) -> Self {
         self.views.push(view);
+        self
+    }
+
+    pub fn add_grid(mut self, grid: Grid) -> Self {
+        self.grid = Some(grid);
+
         self
     }
 
@@ -320,6 +329,16 @@ impl<'a> Chart<'a> {
             axis_group.assign("transform", format!("translate({},{})", self.width - self.margin_right, self.margin_top));
             group.append(axis_group);
         };
+
+        if let Some(ref grid) = self.grid {
+            let ggroup = grid.to_svg().unwrap();
+            let mut grid_group_x = ggroup.first().unwrap().clone();
+            let mut grid_group_y = ggroup.last().unwrap().clone();
+            grid_group_x.assign("transform", format!("translate({}, {})", self.margin_left, self.height - self.margin_top));
+            grid_group_y.assign("transform", format!("translate({}, {})", self.width - self.margin_right, self.margin_top));
+            group.append(grid_group_x);
+            group.append(grid_group_y);
+        }
 
         let mut view_group = Group::new()
             .set("class", "g-view")

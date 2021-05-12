@@ -1,7 +1,9 @@
 use std::fmt::Display;
+
 use svg::node::element::{Group, Path};
 use svg::node::element::path::Data;
 use svg::node::Node;
+
 use crate::components::DatumRepresentation;
 use crate::components::scatter::ScatterPoint;
 
@@ -15,7 +17,7 @@ pub struct LineSeries<T: Display, U: Display> {
 impl<T: Display, U: Display> LineSeries<T, U> {
     pub fn new(
         points: Vec<ScatterPoint<T, U>>,
-        color: String
+        color: String,
     ) -> Self {
         Self {
             points,
@@ -25,7 +27,6 @@ impl<T: Display, U: Display> LineSeries<T, U> {
 }
 
 impl<T: Display, U: Display> DatumRepresentation for LineSeries<T, U> {
-
     fn to_svg(&self) -> Result<Group, String> {
         let mut group = Group::new()
             .set("class", "line");
